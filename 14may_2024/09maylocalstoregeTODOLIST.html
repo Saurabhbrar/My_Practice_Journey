@@ -1,17 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Practics</title>
+
 </head>
+
 <body>
-    <div>
-        <h1>Practics</h1>
+    <h1>My TODO App</h1>
+    <div id="container">
+
+        <input placeholder="Enter TODO Name">
+        <select>
+            <option value="Priority">Priority</option>
+            <option value="High">High</option>
+            <option value="Low">Medium</option>
+            <option value="Medium">Low</option>
+        </select>
+        <button>Add TODO</button>
     </div>
+    <table id="table-container">
+        <thead>
+            <th>S.no</th>
+            <th>Todo Name</th>
+            <th>Priority</th>
+            <th>Delete</th>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
 </body>
+
 </html>
 <script>
+    let todoname = document.querySelector("#container>input")
+    let priority = document.querySelector("#container>select")
+    let button = document.querySelector("#container>button")
+    let tablebody = document.querySelector("#table-container>tbody")
+    let data = []
+
+    button.addEventListener("click", function () {
+        /*  console.log(todoname.value)
+         console.log(priority.value) */
+        let obj = {
+            title: todoname.value,
+            priority: priority.value
+        }
+        data.push(obj)
+
+        savedata()
+        showData(data)
+        todoname.value = ""
+        
+
+    })
+
+    function savedata() {
+        localStorage.setItem("data", JSON.stringify(data))
+    }
+
+    function loaddata() {
+        let lodata = JSON.parse(localStorage.getItem("data"))
+        //console.log(lodata)
+        if (lodata) {
+            data = lodata
+            showData(data)
+        }
+
+    }
+
+    function showData(arr) {
+        //console.log(arr)
+         tablebody.innerHTML = ""
+        arr.forEach((ele, i) => {
+            let tr = document.createElement("tr")
+
+            let td1 = document.createElement("td")
+            td1.innerHTML = `${i + 1}`
+
+            let td2 = document.createElement("td")
+            td2.innerHTML = ele.title
+
+            let td3 = document.createElement("td")
+            td3.innerHTML = ele.priority
+
+            if(ele.priority === "High"){
+                td3.style.backgroundColor="red"
+            }
+            else if(ele.priority === "Medium"){
+                 td3.style.backgroundColor="Green"
+            }
+            else if(ele.priority === "Low"){
+                 td3.style.backgroundColor="Yellow"
+            }
+
+            let td4 = document.createElement("td")
+
+            let btn = document.createElement("button")
+            btn.innerHTML = "Delete"
+            btn.addEventListener("click" , function (){
+                deletetodo(i)
+            })
+            td4.append(btn)
+            tr.append(td1, td2, td3, td4)
+            tablebody.append(tr)
+
+        });
+
+    }
+
+    function deletetodo(index){
+        //console.log(index)
+        data.splice(index , 1)
+        savedata()
+        showData(data)
+    }
+    loaddata()
+    //console.log(data)
 
 
 </script>
