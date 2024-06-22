@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            background-color: rgb(115, 115, 176);
+        }
+
+        #header {
+            display: flex;
+            /*  border: 2px solid red; */
+            margin: auto;
+            /* justify-content: center; */
+
+        }
+
+        #header>select {
+            height: 40px;
+            width: 150px;
+            position: absolute;
+            top: 10;
+            right: 0;
+            margin: 15px;
+            /*  margin-top: 40px; */
+            text-align: center;
+            border-radius: 5px;
+
+        }
+
+        #header>select>option {
+            color: rgb(255, 255, 255);
+            background-color: rgb(115, 115, 176);
+            font-size: 14px;
+        }
+
+        #container {
+            /* border: 5px solid greenyellow; */
+            display: grid;
+            grid-template-columns: auto auto auto auto;
+            background-color: rgb(243, 241, 237);
+            border-radius: 10px;
+        }
+
+        #container>div {
+            /* border: 1px solid rgb(196, 87, 54); */
+            text-align: center;
+            height: 300px;
+            width: 250px;
+            margin: auto;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: rgb(249, 247, 241);
+            margin-top: 50px;
+            margin-bottom: 30px;
+            box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+        }
+
+        #container>div>img {
+
+            height: 50%;
+            width: 150px;
+            border-radius: 10px;
+            /*  margin-left: 20%; */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="header">
+        <h1 style="font-size: 50px; background-color: rgb(115, 115, 176); color: rgb(255, 255, 255);">Fetch-Get data
+            from API</h1>
+        <select>
+            <option value="sort">Sort By</option>
+            <option value="electronics">electronics</option>
+            <option value="jewelery">jewelery</option>
+            <option value="men's clothing">men's clothing</option>
+            <option value="women's clothing">women's clothing</option>
+        </select>
+
+    </div>
+    <div id="container">
+    </div>
+
+
+</body>
+
+
+<script>
+    let container = document.getElementById("container")
+    let selection = document.querySelector("#header>select")
+    selection.addEventListener("change", handelChange)
+    // console.log(selection)
+
+
+
+    function myApi(URL) {
+        let data = fetch(URL)
+
+            .then(res => res.json())
+            .then(json =>
+                /* console.log(json) */
+                showData(json)
+            )
+        //console.log(data)
+    }
+    myApi("https://fakestoreapi.com/products")
+    // myApi('https://fakestoreapi.com/products/categories')
+
+
+
+
+
+    function showData(arr) {
+        //console.log(arr)
+        container.innerHTML = null
+        arr.map(function (ele, index) {
+            let div = document.createElement("div")
+
+            let name = document.createElement("p")
+            name.innerHTML = ele.title
+
+
+            let image = document.createElement("img")
+            image.src = ele.image
+
+            let price = document.createElement("p")
+            price.innerHTML = "price" + " " + ele.price
+
+
+            div.append(image, name, price)
+            container.append(div)
+        })
+    }
+    function handelChange() {
+        let value = selection.value
+        console.log(value)
+        if (value == "sort") {
+            myApi("https://fakestoreapi.com/products")
+        }
+        else {
+            let URL = `https://fakestoreapi.com/products/category/${value}`;
+            myApi(URL)
+        }
+
+    }
+
+
+
+</script>
+
+</html>
